@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import * as d3 from "d3";
-const D3 = () => {
-  const svgRef = useRef(null);
-  const dayPomo = [1, 3, 5, 6, 8, 12, 8];
+const dayPomo = [1, 3, 5, 6, 8, 12, 8];
 
+const D3 = () => {
   useEffect(() => {
     //막대 그래프
     const width = 400;
@@ -13,54 +12,53 @@ const D3 = () => {
 
     // 지정해둔 크기에 따라 캔버스를 그린다.
     const svg = d3
-      .select("body") // body 요소 선택
+      .select("div") // div 요소 선택
       .append("svg") // 'svg'태그를 가진 요소 선택
-      .attr("width", width)
-      .attr("height", height);
-
+      .attr("width", width) // 차트의 너비
+      .attr("height", height); // 차트의 높이
     // input data
     const data = [
       {
         day: "5일전",
-        value: dayPomo.length > 5 ? dayPomo[dayPomo.length - 6] : 0,
+        value: dayPomo.length > 5 ? dayPomo[0] : 0,
         color: "black",
       },
       {
         day: "4일전",
-        value: dayPomo.length > 4 ? dayPomo[dayPomo.length - 5] : 0,
+        value: dayPomo.length > 4 ? dayPomo[1] : 0,
         color: "gray",
       },
       {
         day: "3일전",
-        value: dayPomo.length > 3 ? dayPomo[dayPomo.length - 4] : 0,
+        value: dayPomo.length > 3 ? dayPomo[2] : 0,
         color: "purple",
       },
       {
         day: "2일전",
-        value: dayPomo.length > 2 ? dayPomo[dayPomo.length - 3] : 0,
+        value: dayPomo.length > 2 ? dayPomo[3] : 0,
         color: "yellow",
       },
       {
         day: "어제",
-        value: dayPomo.length > 1 ? dayPomo[dayPomo.length - 2] : 0,
+        value: dayPomo.length > 1 ? dayPomo[4] : 0,
         color: "orange",
       },
       {
         day: "오늘",
-        value: dayPomo.length > 0 ? dayPomo[dayPomo.length - 1] : 0,
+        value: dayPomo.length > 0 ? dayPomo[5] : 0,
         color: "tomato",
       },
     ];
 
     const x = d3
       .scaleBand() // 값이 문자열이라면 scaleBand, 숫자라면 scaleLinear
-      .domain(data.map((object) => object.day)) // input 데이터의 day 값의 범위
-      .range([margin.left, width - margin.right]); // 출력되는 범위, 캔버스내의 좌,우 여백을 제외한 값
+      .domain(data.map((object) => object.day)) // x축의 값 , ['5일전', '4일전', '3일전', '2일전', '어제', '오늘']
+      .range([margin.left, width]); // 출력되는 범위, 캔버스내의 좌,우 여백을 제외한 값 [40,400]
 
     const y = d3
       .scaleLinear() // y축 value 값은 숫자, scaleLinear
-      .domain([0, d3.max(data, (d) => d.value)]) // input 데이터 범위 즉, 최소, 최대값 배열
-      .range([height - margin.bottom, margin.top]); // range는 출력되는 범위, 캔버스 상, 하 여백을 제외한 값
+      .domain([0, d3.max(data, (d) => d.value)]) // input 데이터 범위 즉, 최소, 최대값 배열 [0,12]
+      .range([height - margin.bottom, margin.top]); // range는 출력되는 범위, 캔버스 상, 하 여백을 제외한 값 [400-40,40]
 
     const xAxis = (g) => {
       return (
@@ -101,9 +99,10 @@ const D3 = () => {
       .attr("class", "bar-chart") // 클래스를 부여하여 css, scss등으로 넓이나 색깔 등을 직접 부여 가능
       .attr("fill", (data) => data.color); // input data에 미리 color를 넣어 둔다면 이렇게도 색깔 지정 가능.
   }, [dayPomo]);
+
   return (
     <div>
-      <svg ref={svgRef} />
+      <svg />
     </div>
   );
 };
